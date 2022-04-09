@@ -1,0 +1,146 @@
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">Navbar</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="#">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Link</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Dropdown
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <li><a class="dropdown-item" href="#">Action</a></li>
+              <li><a class="dropdown-item" href="#">Another action</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li>
+                <div class="dropdown-item">
+                  <div class="form-check form-switch">
+                      <input type="checkbox" class="form-check-input" id="darkSwitch">
+                      <label class="custom-control-label" for="darkSwitch">Dark Mode</label>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+          </li>
+        </ul>
+        <form class="d-flex">
+          <input class="form-control me-2" type="search" id="search" placeholder="Search" aria-label="Search">
+          <a class="btn btn-outline-success" id="search-form" onclick="homepage();">Search</a>
+          <script>
+            function homepage() {
+              var search = "/data/" + document.getElementById("search").value;
+              window.location.href = search;
+            }
+            input = document.getElementById("search");
+            input.addEventListener("keyup", function(event) {
+              if (event.keyCode === 13) {
+                var search = "/data/" + document.getElementById("search").value;
+                window.location.href = search;
+              }
+            });
+          </script>
+        </form>
+      </div>
+    </div>
+  </nav>
+<!-- switch-dark -->
+<script>
+  var ShowPasswordToggle = document.querySelector("[type='password']");
+  ShowPasswordToggle.onclick = function () {
+    document.querySelector("[type='password']").classList.add("input-password");
+    document.getElementById("toggle-password").classList.remove("d-none");
+  
+    const passwordInput = document.querySelector("[type='password']");
+    const togglePasswordButton = document.getElementById("toggle-password");
+  
+    togglePasswordButton.addEventListener("click", togglePassword);
+    function togglePassword() {
+      if (passwordInput.type === "password") {
+        passwordInput.type = "text";
+        togglePasswordButton.setAttribute("aria-label", "Hide password.");
+      } else {
+        passwordInput.type = "password";
+        togglePasswordButton.setAttribute(
+          "aria-label",
+          "Show password as plain text. " +
+            "Warning: this will display your password on the screen."
+        );
+      }
+    }
+  };
+</script>
+<style type="text/css">
+  * {
+      cursor: url(https://ani.cursors-4u.net/smiley/smi-3/smi357.cur), auto !important;
+  }
+
+  [data-theme="dark"] {
+      background-color: #111 !important;
+      color: #eee;
+  }
+
+  [data-theme="dark"] .bg-black  {
+      background-color: #fff !important;
+  }
+
+  [data-theme="dark"] .bg-dark {
+      background-color: #eee !important;
+  }
+
+  /* .navbar-light .bg-light */
+  [data-theme="dark"] .navbar-light {
+      background-color: #111 !important;
+  }
+
+  [data-theme="dark"] .bg-light{
+    
+      background-color: #222 !important;
+  }
+
+  [data-theme="dark"] .bg-white {
+      background-color: #000 !important;
+  }
+</style>
+<script>
+  var darkSwitch = document.getElementById("darkSwitch");
+  window.addEventListener("load", function () {
+      if (darkSwitch) {
+          initTheme();
+          darkSwitch.addEventListener("change", function () {
+              resetTheme();
+          });
+      }
+  });
+
+  function initTheme() {
+  var darkThemeSelected =
+      localStorage.getItem("darkSwitch") !== null &&
+      localStorage.getItem("darkSwitch") === "dark";
+  darkSwitch.checked = darkThemeSelected;
+  darkThemeSelected
+      ? document.body.setAttribute("data-theme", "dark")
+      : document.body.removeAttribute("data-theme");
+  }
+
+  function resetTheme() {
+      if (darkSwitch.checked) {
+          document.body.setAttribute("data-theme", "dark");
+          localStorage.setItem("darkSwitch", "dark");
+      } else {
+          document.body.removeAttribute("data-theme");
+          localStorage.removeItem("darkSwitch");
+      }
+  }
+</script>

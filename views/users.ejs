@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.1/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs5/jq-3.6.0/jszip-2.5.0/dt-1.11.5/af-2.3.7/b-2.2.2/b-html5-2.2.2/cr-1.5.5/date-1.1.2/fc-4.0.2/r-2.2.9/rr-1.2.8/sc-2.0.5/sb-1.3.2/datatables.min.css"/>
+     
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.1/js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/v/bs5/jq-3.6.0/jszip-2.5.0/dt-1.11.5/af-2.3.7/b-2.2.2/b-html5-2.2.2/cr-1.5.5/date-1.1.2/fc-4.0.2/r-2.2.9/rr-1.2.8/sc-2.0.5/sb-1.3.2/datatables.min.js"></script>    <title>HomePage</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/fontawesome.min.css" integrity="sha384-jLKHWM3JRmfMU0A5x5AkjWkw/EYfGUAGagvnfryNV3F9VqM98XiIH7VBGVoxVSc7" crossorigin="anonymous">
+    <!-- <script src="../public/src/js/notiflix-aio-3.2.5.min.js"></script> -->
+    <script src="<%= host %>/src/js/notiflix-aio-3.2.5.min.js"></script>
+    <script src="<%= host %>/src/js/sweetalert2.all.min.js"></script>
+</head>
+<body>
+    <%- include('Navbar/homepage') %>
+    <div class="container ">
+        <div class="dev text-end mt-2 my-2">
+            <button class="btn btn-primary btn-sm addusers">Add</button>
+            <script>
+                document.querySelector('.addusers').addEventListener('click', async function(){
+                    const { value: email } = await Swal.fire({
+                        title: 'Input email address',
+                        input: 'email',
+                        inputLabel: 'Your email address',
+                        inputPlaceholder: 'Enter your email address',
+                        inputValue: 'puem.mth@gmail.com',
+                    })
+                    if (email) {
+                        let res = await fetch('/sql/c_mal', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+                            },
+                            body: `email=${email}`
+                        })
+                        let data = await res.json()
+                        if (data.status == false) {
+                            const { value: usersform } = await Swal.fire({
+                                title: `ลงทะเบียนผู้ใช้งาน`,
+                                html:
+                                    '<div class="input-group my-2">'+
+                                    '   <span class="input-group-text">สำหรับผู้ใช้งาน</span>' +
+                                    `   <span class="form-control">${email}</span>`+
+                                    '</div>'+
+                                    '<div class="input-group my-2">'+
+                                    '  <span class="input-group-text">ชื่อและนามสกุล</span>'+
+                                    '  <input type="text" id="usermname_th1" class="form-control" placeholder="ชื่อ" value="ธนภัทร">'+
+                                    '  <input type="text" id="usermname_th2" class="form-control" placeholder="นามสกุล" value="เอี่ยมอาจ">'+
+                                    '</div>'+
+                                    '<div class="input-group my-2">'+
+                                    '  <span class="input-group-text">First and last name</span>'+
+                                    '  <input type="text" aria-label="First name" id="usermname_en1" class="form-control" placeholder="username" value="tanapat">'+
+                                    '  <input type="text" aria-label="Last name" id="usermname_en2" class="form-control" placeholder="lastname" value="eiam-arj">'+
+                                    '</div>'+
+                                    '<div class="input-group my-2">'+
+                                    '  <span class="input-group-text">รหัสผ่าน</span>'+
+                                    '  <input type="password" class="form-control" id="password" name="password" placeholder="Password" value="xxxx">'+
+                                    '</div>'+
+                                    '<div class="input-group mt-2">'+
+                                    '  <span class="input-group-text">ยืนยันรหัสผ่าน</span>'+
+                                    '  <input type="password" class="form-control" id="password_confirm" name="password_confirm" placeholder="Password confirm" value="xxxx">'+
+                                    '</div>',
+                                showCancelButton: true,
+                                focusConfirm: true,
+                                allowOutsideClick: false,
+                                preConfirm: () => {
+                                    if(document.getElementById('usermname_th1').value == ''){
+                                        Swal.showValidationMessage('กรุณากรอกชื่อและนามสกุลภาษาไทย')
+                                    }else if(document.getElementById('usermname_th2').value == ''){
+                                        Swal.showValidationMessage('กรุณากรอกชื่อและนามสกุลภาษาไทย');
+                                    }else if(document.getElementById('usermname_en1').value == ''){
+                                        Swal.showValidationMessage('กรุณากรอกชื่อและนามสกุลภาษาอังกฤษ');
+                                    }else if(document.getElementById('usermname_en2').value == ''){
+                                        Swal.showValidationMessage('กรุณากรอกชื่อและนามสกุลภาษาอังกฤษ');
+                                    }else if(document.getElementById('password').value == ''){
+                                        Swal.showValidationMessage('กรุณากรอกรหัสผ่าน');
+                                    }else if(document.getElementById('password_confirm').value == ''){
+                                        Swal.showValidationMessage('กรุณายืนยันรหัสผ่าน');
+                                    }else if(document.getElementById('password').value != document.getElementById('password_confirm').value){
+                                        Swal.showValidationMessage('รหัสผ่านไม่ตรงกัน');
+                                    }else{
+                                        return {
+                                            useremail: email,
+                                            usermname_th1: document.getElementById('usermname_th1').value,
+                                            usermname_th2: document.getElementById('usermname_th2').value,
+                                            usermname_en1: document.getElementById('usermname_en1').value,
+                                            usermname_en2: document.getElementById('usermname_en2').value,
+                                            password: document.getElementById('password').value
+                                        }
+                                    }
+                                }
+                            })
+                            if (usersform){
+                                // console.log(usersform);
+                                // ส่งข้อมูลไปที่ api
+                                fetch('/sql/a_use', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+                                    },
+                                    // body: usersform
+                                    body: `useremail=${usersform.useremail}&usermname_th1=${usersform.usermname_th1}&usermname_th2=${usersform.usermname_th2}&usermname_en1=${usersform.usermname_en1}&usermname_en2=${usersform.usermname_en2}&password=${usersform.password}`
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    if(data.status == true){
+                                        Swal.fire({
+                                            title: 'สำเร็จ',
+                                            text: 'สมัครสมาชิกสำเร็จ',
+                                            type: 'success',
+                                            confirmButtonText: 'ตกลง'
+                                        })
+                                        .then(result => {
+                                            if(result.value){
+                                                window.location.reload();
+                                            }
+                                        })
+                                    }
+                                })
+                            }
+                        } else {
+                            Swal.fire({
+                                title: 'Error',
+                                text: 'มีผู้ใช้งานแล้ว',
+                                icon: 'error',
+                                confirmButtonText: 'OK'
+                            })
+                        }
+                    }
+                });
+            </script>
+        </div>
+        
+        <table class="table table-striped table-bordered table-hover" id="dataTables-example" style="width:100%">
+            <thead>
+              <tr>
+                <th scope="col">id_static</th>
+                <th scope="col">username</th>
+                <th scope="col">user_ipaddress</th>
+                <th scope="col">user_dateofbirth</th>
+                <th scope="col">user_email</th>
+                <th scope="col">user_gender</th>
+                <th scope="col">created_at</th>
+                <th scope="col">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% for (let i = 0; i < users.length; i++) { %>
+                <tr>
+                    <td scope="row" ><%= users[i].id_static %></td>
+                    <td><%= users[i].username_en %> <%= users[i].lastname_en %></td>
+                    <td><%= users[i].user_ipaddress %></td>
+                    <td><%= users[i].user_dateofbirth %></td>
+                    <td><%= users[i].user_email %></td>
+                    <td><%= users[i].user_gender %></td>
+                    <td><%= users[i].created_at %></td>
+                    <td>
+                        <button type="submit" class="btn btn-primary btn-sm" onclick="getImage('<%= users[i].user_profile %>')">Upload</button>
+                    </td>
+                </tr>
+                <% } %>
+            </tbody>
+          </table>
+          <script>
+              async function getImage(url){
+                await Swal.fire({
+                    title: 'Sweet!',
+                    text: 'Modal with a custom image.',
+                    imageUrl: url,
+                    imageHeight: 200,
+                    imageAlt: 'Custom image'
+                })
+              }
+
+
+            //   document.getElementById('user_profile')?.addEventListener('click', () => {
+            //         Swal.fire({
+            //             title: 'Sweet!',
+            //             text: 'Modal with a custom image.',
+            //             imageUrl: '',
+            //             imageWidth: 400,
+            //             imageHeight: 200,
+            //             imageAlt: 'Custom image',
+            //         })
+            //   });
+         
+            //   document.getElementById('user_profile')?.addEventListener('click', () => {
+            //     Swal.fire({
+            //         title: 'อัพโหลดรูปภาพ',
+            //         html:
+            //         '<input id="input-file" type="file" name="file" class="form-control">',
+            //         showCancelButton: true,
+            //         confirmButtonText: 'อัพโหลด',
+            //         showLoaderOnConfirm: true,
+            //         preConfirm: () => {
+            //             return new Promise((resolve) => {
+            //                 // setTimeout(() => {
+            //                 //     resolve();
+            //                 // }, 2000);
+            //             });
+            //         },
+            //         allowOutsideClick: () => !Swal.isLoading()
+            //     }).then((result) => {
+            //         if (result.value) {
+            //             Swal.fire({
+            //                 title: 'อัพโหลดสำเร็จ',
+            //                 html: 'อัพโหลดสำเร็จ',
+            //                 type: 'success',
+            //                 confirmButtonText: 'ตกลง'
+            //             })
+            //         }
+            //     })
+            // })
+          </script>
+          <script>
+              $(document).ready(function() {
+                $('#dataTables-example').DataTable({
+                    colReorder: true,
+                    responsive: true
+                });
+              });
+          </script>
+    </div>
+</body>
+</html>
